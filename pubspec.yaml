@@ -32,7 +32,9 @@ dependencies:
   country_icons:
   google_fonts:
   o_color_picker:
-  http:  
+  http:
+  shared_preferences:   
+  universal_io: 
 
 dev_dependencies:
   flutter_test:

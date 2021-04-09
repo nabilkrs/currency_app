@@ -3,14 +3,32 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:o_color_picker/o_color_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:currency/models/currency.dart';
+import 'dart:convert';
 
+import 'package:shared_preferences/shared_preferences.dart';
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
+ int x = 0;
+  void stocker(int x) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt('lang', x);
+  }
 
+  void getter() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+
+    setState(() {
+      x = prefs.getInt('lang') ?? 1;
+    });
+  }
+
+  
 List<String> countries = [
   "Tunisia",
   "France",
@@ -62,10 +80,34 @@ print("currency is : "+value),
 });
 
   
-return "TND";
+return _myCurrency;
 
 
 }
+String ch="";
+Future<String> _getResult(String from,String to)async{
+  final String query = from+"_"+to;
+  
+   await http.read("https://free.currconv.com/api/v7/convert?q=$query&compact=ultra&apiKey=8e45a53f00986846829d").then((value) => {
+  // print('abcd : '+value.substring(11,value.indexOf('.')+3)),
+  setState((){
+    ch = value.substring(11,value.indexOf('.')+3);
+  })
+});
+
+return ch;
+
+}
+
+
+
+
+
+
+
+
+
+
 
 @override
   void initState() {
@@ -74,6 +116,10 @@ return "TND";
     _getCurrentCurrency();
     
   }
+
+
+TextEditingController _searchController = TextEditingController();
+bool validate=true;
 
 
 
@@ -91,9 +137,15 @@ return "TND";
           IconButton(
             icon:Icon(Icons.translate),
             onPressed: (){
-              _getCurrentCurrency();
-            },
-          ),
+              showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return CustomDialog();
+                    });
+            }
+              
+            
+            ),
         
         ],
         leading: IconButton(
@@ -124,7 +176,7 @@ return "TND";
             },
           ),
         centerTitle: true,
-        title: Text("My Dollar",
+        title: Text("My Dollar" ,
           style: GoogleFonts.muli(),
 ),
         elevation: 0,
@@ -193,10 +245,33 @@ return "TND";
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: TextField(
+                    controller:_searchController,
+                    onChanged: (newWord){
+                       if (newWord.isEmpty){ setState(() {
+                          validate = true;
+                        });}
+                      else if(newWord.length!=3){
+                        setState(() {
+                          validate = false;
+                        });
+                        
+                      } 
+                     
+                      else{
+                         setState(() {
+                          validate = true;
+                        });
+
+                      }
+
+
+
+                    },
                     
                
                   // controller: teSeach,
                   decoration: InputDecoration(
+                    errorText: validate?null:'Invalide Currency code',
                     
                     
                     hintText: 'Search for currency',
@@ -228,24 +303,27 @@ return "TND";
 
                        }
                        else{
-                         return Column(
-                         children: [
-                           SizedBox(height:15),
-                           ListTile(
+                         return FutureBuilder<Currency>(
+                           future: null,
+                           builder: (context, snapshot) {
+                             return Column(
+                             children: [
+                               SizedBox(height:15),
+                               ListTile(
                     leading: Container(
                       width: 60,
                       height:60,
                       decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: 
-                              AssetImage('icons/flags/png/${flags[index].toLowerCase()}.png', package: 'country_icons'),
-                              fit: BoxFit.cover,
-                            ),
-                            shape: BoxShape.circle,
-                            
+                                image: DecorationImage(
+                                  image: 
+                                  AssetImage('icons/flags/png/${flags[index].toLowerCase()}.png', package: 'country_icons'),
+                                  fit: BoxFit.cover,
+                                ),
+                                shape: BoxShape.circle,
+                                
                       ),
                     ),
-                    title: Text("1 ${currencies[index]} = 50 DZD",style: GoogleFonts.muli(),),
+                    title: Text("1 ${currencies[index]} = ${_getResult(_myCurrency,currencies[index])} DZD",style: GoogleFonts.muli(),),
                     trailing: IconButton(
                       icon:Icon(Icons.calculate,color:selectedColor),
                       onPressed: (){},
@@ -260,8 +338,10 @@ return "TND";
                 ),
 
                
-                         ],
+                             ],
                        );
+                           }
+                         );
 
 
                        }
@@ -287,6 +367,157 @@ return "TND";
         ),
       ),
       
+    );
+  }
+}
+
+class CustomDialog extends StatefulWidget {
+  @override
+  _CustomDialogState createState() => _CustomDialogState();
+}
+
+class _CustomDialogState extends State<CustomDialog> {
+  int x = 0;
+  void stocker(int x) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt('lang', x);
+  }
+
+  void getter() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+
+    setState(() {
+      x = prefs.getInt('lang') ?? 1;
+    });
+  }
+
+  dialogContent(BuildContext context, int v) {
+    getter();
+
+    // x = v;
+    return SingleChildScrollView(
+      child: Container(
+        height: 300,
+        decoration: new BoxDecoration(
+          color: Colors.red[700],
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 10.0,
+              offset: const Offset(0.0, 10.0),
+            ),
+          ],
+        ),
+        child: Column(
+        
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: Text(
+                "Choose Language",
+                style: GoogleFonts.tajawal(
+                    textStyle: TextStyle(fontSize: 25, color: Colors.white)),
+              ),
+            ),
+            RadioListTile(
+              title: Text("English",
+                  style: GoogleFonts.tajawal(
+                      textStyle: TextStyle(color: Colors.white))),
+              activeColor: Colors.white,
+              value: 1,
+              groupValue: x,
+              onChanged: (value) {
+                setState(() {
+                  x = value;
+                });
+                stocker(value);
+                 Navigator.pop(context, 'en_US');
+
+              
+              },
+            ),
+            RadioListTile(
+              title: Text("Français",
+                  style: GoogleFonts.tajawal(
+                      textStyle: TextStyle(color: Colors.white))),
+              activeColor: Colors.white,
+              value: 2,
+              groupValue: x,
+              onChanged: (value) {
+              
+                setState(() {
+                  x = value;
+                });
+                stocker(value);
+                Navigator.pop(context, 'fr');
+              },
+            ),
+            RadioListTile(
+              title: Text("Española",
+                  style: GoogleFonts.tajawal(
+                      textStyle: TextStyle(color: Colors.white))),
+              activeColor: Colors.white,
+              value: 3,
+              groupValue: x,
+              onChanged: (value) {
+              
+                setState(() {
+                  x = value;
+                });
+                stocker(value);
+                Navigator.pop(context, 'es');
+              },
+            ),
+            RadioListTile(
+              title: Text("Deutsche",
+                  style: GoogleFonts.tajawal(
+                      textStyle: TextStyle(color: Colors.white))),
+              activeColor: Colors.white,
+              value: 4,
+              groupValue: x,
+              onChanged: (value) {
+                
+                setState(() {
+                  x = value;
+                });
+                stocker(value);
+                Navigator.pop(context, 'ar');
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  int v;
+
+  Future<int> getter1(int v) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    v = prefs.getInt('lang');
+
+    return v;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getter();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      elevation: 0.0,
+      backgroundColor: Colors.transparent,
+      child: dialogContent(context, v),
     );
   }
 }
