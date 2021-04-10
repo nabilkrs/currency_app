@@ -1,19 +1,18 @@
 class Currency {
-  String from,to;
-  double result=300;
+  double result;
 
-  Currency(this.from,this.to);
+
   
 
   Currency.fromJson(Map<String, dynamic> json) {
     
-    result = json["USD_TND"];
+    result = json["result"];
   }
 
   Map<String, dynamic> toJson() {
     
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data["USD_TND"] = this.result;
+    data["result"] = this.result;
     return data;
   }
 }
