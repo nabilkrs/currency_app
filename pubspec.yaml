@@ -35,7 +35,9 @@ dependencies:
   http:
   shared_preferences:   
   universal_io:
-  flutter_pin_code_fields:  
+  flutter_pin_code_fields:
+  translator: 
+  device_preview:   
 
 
 dev_dependencies:
