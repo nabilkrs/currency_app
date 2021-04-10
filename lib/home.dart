@@ -57,7 +57,8 @@ class _HomeState extends State<Home> {
     "sa",
     "ca",
   ];
-  TextEditingController _calculatorController = TextEditingController(text: "1");
+  TextEditingController _calculatorController =
+      TextEditingController(text: "1");
 
   Color selectedColor = Colors.blue;
   String _myCurrency;
@@ -81,26 +82,21 @@ class _HomeState extends State<Home> {
 
   String ch = "";
   Future<Currency> _getResult(String from, String to) async {
-
-    
-        // .then((value) => {
-        //       // print('abcd : '+value.substring(11,value.indexOf('.')+3)),
-        //       setState(() {
-        //         ch = value.substring(value.lastIndexOf('result') +8,value.lastIndexOf('result') +12 );
-        //       })
-        //     });
-        //     print("la valeur est : "+ch);
-   http.Response myresponse = await http.get("https://api.exchangerate.host/convert?from=$from&to=$to");
-   if(myresponse.statusCode == 200){
-     return Currency.fromJson(json.decode(myresponse.body));
-   }
-   else{
-     throw Exception('Cannot connect to server');
-   }
-
-
+    // .then((value) => {
+    //       // print('abcd : '+value.substring(11,value.indexOf('.')+3)),
+    //       setState(() {
+    //         ch = value.substring(value.lastIndexOf('result') +8,value.lastIndexOf('result') +12 );
+    //       })
+    //     });
+    //     print("la valeur est : "+ch);
+    http.Response myresponse = await http
+        .get("https://api.exchangerate.host/convert?from=$from&to=$to");
+    if (myresponse.statusCode == 200) {
+      return Currency.fromJson(json.decode(myresponse.body));
+    } else {
+      throw Exception('Cannot connect to server');
+    }
   }
-
 
   @override
   void initState() {
@@ -111,7 +107,7 @@ class _HomeState extends State<Home> {
   TextEditingController _searchController = TextEditingController();
   bool validate = true;
   bool sumvalidate = true;
-  double somme=0;
+  double somme = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +125,6 @@ class _HomeState extends State<Home> {
                 //       return CustomDialog();
                 //     });
                 _getResult('EUR', 'SAR');
-                
               }),
         ],
         leading: IconButton(
@@ -161,8 +156,9 @@ class _HomeState extends State<Home> {
         centerTitle: true,
         title: Text(
           "My Dollar",
-          style: GoogleFonts.muli(fontWeight: FontWeight.bold,
-                                             ),
+          style: GoogleFonts.muli(
+            fontWeight: FontWeight.bold,
+          ),
         ),
         elevation: 0,
       ),
@@ -213,14 +209,18 @@ class _HomeState extends State<Home> {
                             children: [
                               Text(
                                 "Country Code: ${_trimCurrency(_myCurrency).toUpperCase()}",
-                                style: GoogleFonts.muli(fontWeight: FontWeight.bold,
-                                              fontSize: 15,),
+                                style: GoogleFonts.muli(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
                               ),
                               SizedBox(height: 5),
                               Text(
                                 "Currency: ${_myCurrency.toUpperCase()}",
-                                style: GoogleFonts.muli(fontWeight: FontWeight.bold,
-                                              fontSize: 15,),
+                                style: GoogleFonts.muli(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
                               ),
                             ],
                           ),
@@ -278,169 +278,220 @@ class _HomeState extends State<Home> {
                           return SizedBox();
                         } else {
                           return FutureBuilder<Currency>(
-                            future:_getResult(currencies[index],_myCurrency ) ,
-                            builder: (context, snapshot) {
-                              if(!snapshot.hasData){
-                                return Text("Loading...");
-                              }
-                              else{
-                                TextEditingController feedctrl = TextEditingController(text:snapshot.data.result.toString().substring(0,4));
-                                return Column(
-                                      children: [
-                                        SizedBox(height: 15),
-                                        ListTile(
-                                          leading: Container(
-                                            width: 50,
-                                            height: 50,
-                                            decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                image: AssetImage(
-                                                    'icons/flags/png/${flags[index].toLowerCase()}.png',
-                                                    package: 'country_icons'),
-                                                fit: BoxFit.cover,
-                                              ),
-                                              shape: BoxShape.circle,
+                              future:
+                                  _getResult(currencies[index], _myCurrency),
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return Text("Loading...");
+                                } else {
+                                  TextEditingController feedctrl =
+                                      TextEditingController(
+                                          text: snapshot.data.result
+                                              .toString()
+                                              .substring(0, 4));
+                                  return Column(
+                                    children: [
+                                      SizedBox(height: 15),
+                                      ListTile(
+                                        leading: Container(
+                                          width: 50,
+                                          height: 50,
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                              image: AssetImage(
+                                                  'icons/flags/png/${flags[index].toLowerCase()}.png',
+                                                  package: 'country_icons'),
+                                              fit: BoxFit.cover,
                                             ),
+                                            shape: BoxShape.circle,
                                           ),
-                                          title: Text(
-                                            "1 ${currencies[index]} = ${snapshot.data.result.toString().substring(0,4)} $_myCurrency",
-                                            style: GoogleFonts.muli(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15,
-                                              
-                                            ),
+                                        ),
+                                        title: Text(
+                                          "1 ${currencies[index]} = ${snapshot.data.result.toString().substring(0, 4)} $_myCurrency",
+                                          style: GoogleFonts.muli(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15,
                                           ),
-                                          trailing: IconButton(
-                                            icon: Icon(Icons.calculate,
-                                                color: selectedColor),
-                                            onPressed: () {
-                                              showDialog(
-                                                context:context,
+                                        ),
+                                        trailing: IconButton(
+                                          icon: Icon(Icons.calculate,
+                                              color: selectedColor),
+                                          onPressed: () {
+                                            
+                                            showDialog(
+                                                context: context,
                                                 barrierDismissible: true,
-
-                                                builder: (context){
-                                                  _calculatorController.text="1";
+                                                builder: (context) {
+                                                  _calculatorController.text =
+                                                      "1";
                                                   return Dialog(
-                                                    insetPadding: EdgeInsets.symmetric(horizontal: 20,vertical:60),
-
-                                                insetAnimationCurve: Curves.easeInOut,
-                                                insetAnimationDuration: const Duration(milliseconds: 680),
-                                                
-
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(10),
-                                                ),
-
-
-                                                backgroundColor: Colors.transparent,
-
-                                                    child:Container(
-                                                      color:Colors.white,
-                                                      child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                      insetPadding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 20,
+                                                              vertical: 60),
+                                                      insetAnimationCurve:
+                                                          Curves.easeInOut,
+                                                      insetAnimationDuration:
+                                                          const Duration(
+                                                              milliseconds:
+                                                                  680),
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                      ),
+                                                      backgroundColor:
+                                                          Colors.transparent,
+                                                      child: Container(
+                                                        color: Colors.white,
+                                                        child: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
                                                           children: [
                                                             Padding(
-                                                              padding: const EdgeInsets.all(8.0),
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(8.0),
                                                               child: TextField(
-                                                                textAlign: TextAlign.center,
-                      controller:_calculatorController ,
-                      keyboardType: TextInputType.number,
-                      
-                      onChanged: (value){
-
-
-
-
-                        if(value.isNotEmpty){
-
-                          setState(() {
-                            
-                            feedctrl.text = (double.parse(value)*double.parse(snapshot.data.result.toString().substring(0,4))).toString();
-                          });
-
-                        }
-                        
-
-
-                        else{
-                          setState(() {
-                            feedctrl.text=snapshot.data.result.toString().substring(0,4);
-                           
-                          });
-                        }
-
-                        
-
-
-                      },
-                      
-                      
-                      
-
-           
-                      decoration: InputDecoration(
-                        hintText: '1',
-                        
-                        
-                          
-                         
-                          labelText: _myCurrency,
-                          
-                         
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                          )),
-                    ),
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                controller:
+                                                                    _calculatorController,
+                                                                keyboardType:
+                                                                    TextInputType
+                                                                        .number,
+                                                                onChanged:
+                                                                    (value) {
+                                                                  if (value
+                                                                      .isNotEmpty) {
+                                                                    setState(
+                                                                        () {
+                                                                      feedctrl
+                                                                          .text = (double.parse(value) *
+                                                                              double.parse(snapshot.data.result.toString().substring(0, 4)))
+                                                                          .toString();
+                                                                    });
+                                                                  } else {
+                                                                    setState(
+                                                                        () {
+                                                                      feedctrl.text = snapshot
+                                                                          .data
+                                                                          .result
+                                                                          .toString()
+                                                                          .substring(
+                                                                              0,
+                                                                              4);
+                                                                    });
+                                                                  }
+                                                                },
+                                                                decoration:
+                                                                    InputDecoration(
+                                                                        hintText:
+                                                                            '1',
+                                                                        labelText:snapshot.data.result.toString().substring(0, 4)[0]=="0"?
+                                                                            _myCurrency:currencies[index],
+                                                                        border:
+                                                                            OutlineInputBorder(
+                                                                          // borderRadius:BorderRadius.all(Radius.circular(10)),
+                                                                        )),
+                                                              ),
                                                             ),
-                    SizedBox(height:15),
-                    Text("=",style: TextStyle(fontSize: 25)),
+                                                            SizedBox(
+                                                                height: 15),
+                                                            Text("=",
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        25)),
+                                                            SizedBox(
+                                                                height: 15),
+                                                             feedctrl.text[0]=="0"?
+                                                             FutureBuilder<Currency>(
+                                                               future: _getResult(_myCurrency, currencies[index]),
+                                                               builder: (context, snap) {
+                                                               
+                                                                  if(snap.hasData){
+                                                                     feedctrl.text=snap.data.result.toString().substring(0, 4);
+                                                                     snapshot.data.result=snap.data.result;
+                                                              
+                                                                 return Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .all(8.0),
+                                                                  child: TextField(
+                                                                    enabled: false,
+                                                                    maxLines: null,
+                                                                    controller:
+                                                                        feedctrl,
+                                                                    decoration:
+                                                                        InputDecoration(
+                                                                      border:
+                                                                          OutlineInputBorder(),
+                                                                      labelText:currencies[index],
+                                                                    ),
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                  ),
+                                                            );
+                                                                  }
+                                                                  else{
+                                                                    return SizedBox();
+                                                                  }
+                                                               }
+                                                             )
 
-                    SizedBox(height:15),
 
 
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextField(
-                        
-                                              enabled: false,
-                                              maxLines: null,
-                                              controller: feedctrl,
-                                              decoration: InputDecoration(
-                                                
-                                                border: OutlineInputBorder(),
-                                                labelText: currencies[index],
-                                              ),
-                                              textAlign: TextAlign.center,
-                                            ),
-                    ),
-
-
-                                                        ],),
-                                                    )
-                                                  );
-
-
-                                                }
-
-
-                                              );
+                                                             :
 
 
 
-                                            },
-                                          ),
+
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(8.0),
+                                                              child: TextField(
+                                                                enabled: false,
+                                                                maxLines: null,
+                                                                controller:
+                                                                    feedctrl,
+                                                                decoration:
+                                                                    InputDecoration(
+                                                                  border:
+                                                                      OutlineInputBorder(),
+                                                                  labelText:
+                                                                      _myCurrency,
+                                                                ),
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ));
+                                                }).then((value) => {
+                                                 setState((){
+                                                    snapshot.data.result=0;
+                                                 })
+                                                });
+                                          },
                                         ),
-                                        SizedBox(height: 5),
-                                        Divider(
-                                          color: Colors.black,
-                                          indent: 30,
-                                          endIndent: 30,
-                                        ),
-                                      ],
-                                    );
-                              }
-                            }
-                          );
+                                      ),
+                                      SizedBox(height: 5),
+                                      Divider(
+                                        color: Colors.black,
+                                        indent: 30,
+                                        endIndent: 30,
+                                      ),
+                                    ],
+                                  );
+                                }
+                              });
                         }
                       },
                     ),
