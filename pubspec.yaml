@@ -34,7 +34,9 @@ dependencies:
   o_color_picker:
   http:
   shared_preferences:   
-  universal_io: 
+  universal_io:
+  flutter_pin_code_fields:  
+
 
 dev_dependencies:
   flutter_test:
