@@ -564,16 +564,12 @@ dialogContent(BuildContext context) {
         ),
         elevation: 0,
       ),
-      body: FutureBuilder(
-        future: Future.delayed(Duration(seconds: 3)),
-        builder: (context, abcd) {
-
-          if(abcd.connectionState== ConnectionState.done){
-            return Padding(
+      body: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
                 // margin:EdgeInsets.symmetric(horizontal: 10),
                 height: MediaQuery.of(context).size.height - 20,
+                width: MediaQuery.of(context).size.width-20,
                 // padding: EdgeInsets.only(top:30),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -1694,23 +1690,15 @@ dialogContent(BuildContext context) {
                         ),
                       ),
                       SizedBox(height: 5),
+                      
                       _joker,
                       
                     ],
                   ),
-                )),
-          );
-
-          }
-          else{
-            return Center(child:CircularProgressIndicator());
-          }
-
-
-
-          
-        }
-      ),
+                ),
+                
+                ),
+          )
     );
   }
 }
