@@ -353,7 +353,7 @@ class _HomeState extends State<Home> {
 
     return SingleChildScrollView(
       child: Container(
-        height: 700,
+        height: 300,
         decoration: new BoxDecoration(
           color: selectedColor,
           shape: BoxShape.rectangle,
@@ -531,7 +531,7 @@ class _HomeState extends State<Home> {
               borderRadius: BorderRadius.circular(20),
             ),
             child: SingleChildScrollView(
-              child: Column(
+                            child: Column(
                 children: [
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
@@ -1256,8 +1256,7 @@ class _HomeState extends State<Home> {
                                         validate = true;
 
                                         _joker = FutureBuilder<Currency>(
-                                            future: _getResult(_myCurrency,
-                                                newWord.toUpperCase()),
+                                            future: _getResult(newWord.toUpperCase(),_myCurrency),
                                             builder: (context, s) {
                                               if (!s.hasData) {
                                                 return Text("...");
@@ -1363,7 +1362,7 @@ class _HomeState extends State<Home> {
                                                                           },
                                                                           decoration: InputDecoration(
                                                                               hintText: '1',
-                                                                              labelText: s.data.result.toString().substring(0, 4)[0] == "0" ? _myCurrency : newWord.toUpperCase(),
+                                                                              labelText: s.data.result.toString().substring(0, 4)[0] == "0" ?  newWord.toUpperCase():_myCurrency,
                                                                               border: OutlineInputBorder()),
                                                                         ),
                                                                       ),
@@ -1384,7 +1383,6 @@ class _HomeState extends State<Home> {
                                                                                 if (snap.hasData) {
                                                                                   feedctrl.text = snap.data.result.toString().substring(0, 4);
                                                                                   s.data.result = snap.data.result;
-
                                                                                   return Padding(
                                                                                     padding: const EdgeInsets.all(8.0),
                                                                                     child: TextField(
@@ -1393,7 +1391,8 @@ class _HomeState extends State<Home> {
                                                                                       controller: feedctrl,
                                                                                       decoration: InputDecoration(
                                                                                         border: OutlineInputBorder(),
-                                                                                        labelText: newWord.toUpperCase(),
+                                                                               labelText: s.data.result.toString().substring(0, 4)[0] != "0" ?  newWord.toUpperCase():_myCurrency,
+
                                                                                       ),
                                                                                       textAlign: TextAlign.center,
                                                                                     ),
